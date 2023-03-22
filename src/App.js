@@ -20,14 +20,27 @@ class App extends React.Component {
   state = {
     randomQuote: null,
     loading: true,
-    color: ''
+    color: '',
+    twitterLink: '',
+    tumblrLink: ''
   }
 
   async componentDidMount() {
     const randomQuote = await this.loadQuotes()
+    const possibleColors = ['#f99d12', '#e19059', '#f64447', '#f65a77', '#f738ff', '#7b13de']
+    const currentColor = possibleColors[Math.floor(Math.random() * possibleColors.length)]
     this.setState({
         loading: false,
-        randomQuote
+        randomQuote,
+        color: currentColor,
+        twitterLink: 'https://twitter.com/intent/tweet?text=' +
+        encodeURIComponent('"' + randomQuote.quote + '" ' + randomQuote.author),
+        tumblrLink: 'https://www.tumblr.com/widgets/share/tool?posttype=quote&tags=quotes,freecodecamp&caption=' +
+        encodeURIComponent(randomQuote.quote) +
+        '&content=' +
+        encodeURIComponent(randomQuote.author) +
+        '&canonicalUrl=https%3A%2F%2Fwww.tumblr.com%2Fbuttons&shareSource=tumblr_share_button'
+    
     })
 }
   handleNewQuoteClick = async() => {
@@ -38,20 +51,28 @@ class App extends React.Component {
     const possibleColors = ['#f99d12', '#e19059', '#f64447', '#f65a77', '#f738ff', '#7b13de']
     const currentColor = possibleColors[Math.floor(Math.random() * possibleColors.length)]
     this.setState({
-      randomQuote, loading: false, color: currentColor
+      randomQuote, loading: false, color: currentColor, twitterLink: 'https://twitter.com/intent/tweet?text=' +
+      encodeURIComponent('"' + randomQuote.quote + '" ' + randomQuote.author),
+      tumblrLink: 'https://www.tumblr.com/widgets/share/tool?posttype=quote&tags=quotes,freecodecamp&caption=' +
+      encodeURIComponent(randomQuote.quote) +
+      '&content=' +
+      encodeURIComponent(randomQuote.author) +
+      '&canonicalUrl=https%3A%2F%2Fwww.tumblr.com%2Fbuttons&shareSource=tumblr_share_button'
     })
   }
 
   render() {
-    const {loading, randomQuote, color} = this.state
+    const {loading, randomQuote, color, twitterLink, tumblrLink} = this.state
     const appStyle = {backgroundColor:color}
     const buttonStyle = {color:color}
   return (
     <div className="App" style={appStyle}>
       <Wrapper>
         <div className='buttonDiv'>
-          <button value={'tumblr'} ><i style={buttonStyle} class="fa-brands fa-tumblr"></i></button>
-          <button value={'twitter'} ><i style={buttonStyle} class="fa-brands fa-twitter"></i></button>
+          <a target="_blank" href={tumblrLink}><button value={'tumblr'} ><i style={buttonStyle} className="fa-brands fa-tumblr"></i></button></a>
+          
+          <a target="_blank" href={twitterLink}><button value={'twitter'} ><i style={buttonStyle} className="fa-brands fa-twitter"></i></button></a>
+          
           <button style={buttonStyle} value={'new-quote'} onClick={this.handleNewQuoteClick} >New quote</button>
         </div>
         <QuoteApp randomQuote={randomQuote} loading={loading} color={color}/>

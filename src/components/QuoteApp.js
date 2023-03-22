@@ -4,7 +4,6 @@ import './QuoteApp.css'
 class QuoteApp extends React.Component {
     render() {
       const quoteStyle = {color: this.props.color}
-      console.log(this.props.color)
     if (this.props.loading) {
         return
     }
